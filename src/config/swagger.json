@@ -1,0 +1,313 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "This is a sample trade server. This document contains the swagger statement to build a microservices based system for the users to create trades and query them with parameters.",
+    "version": "1.0.0",
+    "title": "Trades Management"
+  },
+  "host": "localhost:3000",
+  "tags": [
+    {
+      "name": "trade",
+      "description": "Everything about your trades"
+    }
+  ],
+  "schemes": [
+    "https",
+    "http"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/auth/token": {
+      "post": {
+        "tags": [
+          "trade"
+        ],
+        "description": "This method enables to get token for user trade data API.",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "description": "ID of user to return data",
+            "schema": {
+              "$ref": "#/definitions/tokenRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/trades": {
+      "post": {
+        "tags": [
+          "trade"
+        ],
+        "description": "This method enables to create the trade for user.",
+        "parameters": [
+          {
+            "name": "access_token",
+            "type": "string",
+            "in": "header",
+            "required": true,
+            "description": "Attach JWT token"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Information of the user trade",
+            "schema": {
+              "$ref": "#/definitions/tradeRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "trade id already exist"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "trade"
+        ],
+        "description": "This method enables to get all user trade list.",
+        "parameters": [
+          {
+            "name": "access_token",
+            "type": "string",
+            "in": "header",
+            "required": true,
+            "description": "Attach JWT token"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "trade"
+        ],
+        "description": "This method enables to delete all user trade list.",
+        "parameters": [
+          {
+            "name": "access_token",
+            "type": "string",
+            "in": "header",
+            "required": true,
+            "description": "Attach JWT token"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/trades/users/{userID}": {
+      "get": {
+        "tags": [
+          "trade"
+        ],
+        "description": "This method enables to get user trade data by userID.",
+        "parameters": [
+          {
+            "name": "access_token",
+            "type": "string",
+            "in": "header",
+            "required": true,
+            "description": "Attach JWT token"
+          },
+          {
+            "name": "userID",
+            "in": "path",
+            "description": "ID of user to return data",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "No data found"
+          }
+        }
+      }
+    },
+    "/stocks/{stockSymbol}/trades": {
+      "get": {
+        "tags": [
+          "trade"
+        ],
+        "description": "This method enables to get trade records filtered by the stock symbol and trade type in the given date range.",
+        "parameters": [
+          {
+            "name": "access_token",
+            "type": "string",
+            "in": "header",
+            "required": true,
+            "description": "Attach JWT token"
+          },
+          {
+            "name": "stockSymbol",
+            "in": "path",
+            "description": "value to return",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "description": "value to return",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "description": "YYYY-MM-DD",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "end",
+            "in": "query",
+            "description": "YYYY-MM-DD",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "No data found"
+          }
+        }
+      }
+    },
+    "/stocks/{stockSymbol}/price": {
+      "get": {
+        "tags": [
+          "trade"
+        ],
+        "description": "This method enables to get highest and lowest price from user trade list in given date range.",
+        "parameters": [
+          {
+            "name": "access_token",
+            "type": "string",
+            "in": "header",
+            "required": true,
+            "description": "Attach JWT token"
+          },
+          {
+            "name": "stockSymbol",
+            "in": "path",
+            "description": "value to return",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "description": "YYYY-MM-DD",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "end",
+            "in": "query",
+            "description": "YYYY-MM-DD",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "No data found"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "tradeRequest": {
+      "type": "object",
+      "required": [
+        "id",
+        "type",
+        "symbol",
+        "price",
+        "shares",
+        "user"
+      ],
+      "properties": {
+        "id": {
+          "type": "number",
+          "example": "1"
+        },
+        "type": {
+          "type": "string",
+          "example": "buy"
+        },
+        "symbol": {
+          "type": "string",
+          "example": "AC"
+        },
+        "price": {
+          "type": "number",
+          "example": "156.22"
+        },
+        "shares": {
+          "type": "number",
+          "example": "22.34"
+        },
+        "user": {
+          "type": "object",
+          "required": [
+            "name"
+          ],
+          "properties": {
+            "name": {
+              "type": "string",
+              "example": "KK"
+            }
+          }
+        }
+      }
+    },
+    "tokenRequest": {
+      "type": "object",
+      "required": [
+        "accessKey"
+      ],
+      "properties": {
+        "accessKey": {
+          "type": "string",
+          "example": "abcd1234"
+        }
+      }
+    }
+  }
+}
